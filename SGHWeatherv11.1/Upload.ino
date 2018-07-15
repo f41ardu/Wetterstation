@@ -1,3 +1,4 @@
+// SGHWaether v11.1
 void uploadThingspeak(String thingspeakKey, float fields[]) {
 
   String startCmd = "AT+CIPSTART=\"TCP\",\"" + domain + "\",80";

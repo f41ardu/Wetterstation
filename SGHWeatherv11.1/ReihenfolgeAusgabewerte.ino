@@ -3,7 +3,7 @@
 Hier wird die Reihenfolge der Werte die der Arduino
 mit voller Bestückung hintereinander ausgibt.
 Die Werte werden voneinander mit einem Kommas getrennnt:
-
+// SGHWaether v11.1
   
 1.    Der Luftdruck             (in hPa)        BMP180            [Variable: Druck.p0]              -> A4 (SDA), A5 (SCL), GND(GND), VCC(3,3V)
 2.    Den absuluten Luftdruck   (in hPa)        BMP180            [Variable: Druck.P]               -> A4 (SDA), A5 (SCL), GND(GND), VCC(3,3V)

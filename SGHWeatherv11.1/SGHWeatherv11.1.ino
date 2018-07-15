@@ -4,7 +4,7 @@
 //  |  https://thingspeak.com/channels/299338 |
 //  |                                         |
 //  -------------------------------------------
-
+// SGHWaether v11.1
 // #include <SoftwareSerial.h>
 #include "AltSoftSerial.h"
 
