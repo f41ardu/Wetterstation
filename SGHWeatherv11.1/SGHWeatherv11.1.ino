@@ -65,9 +65,9 @@ unsigned long wind_lastTime = 0;
 // Thinkspeak Verbindung 
 String domain = "184.106.153.149";
 String ssid = "PhysComp";
-String password = "CanSatNix";
+String password = "XXXXXXXXXXX";
 
-String thingspeakKey = "1BABGNISXF8CLHLN";
+String thingspeakKey = "YYYYYYYYYYYY";
 
 boolean errorCondition = false;
 
