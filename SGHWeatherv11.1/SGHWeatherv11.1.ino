@@ -4,9 +4,9 @@
 //  |  https://thingspeak.com/channels/299338 |
 //  |                                         |
 //  -------------------------------------------
-// SGHWaether v11.1
+// SGHWeather v11.1
 // #include <SoftwareSerial.h>
-#include "AltSoftSerial.h"
+
 
 // AltSoftSerial always uses these pins:
 //
@@ -15,11 +15,14 @@
 // Arduino Nano      9         8           10
 
 // Bibliotheken
-#include "EnableInterrupt.h"
+// Bibliotheken
+#include "src/AltSoftSerial/AltSoftSerial.h"
+#include "src/EnableInterrupt/EnableInterrupt.h"
+#include "src/GP2Y1010AU0F/GP2Y1010AU0F.h"
+#include "src/UVlib/UVlib.h"
+#include "src/DHT/DHT.h"
+
 #include "BMP180wrapper.h"
-#include "GP2Y1010AU0F.h"
-#include "UVlib.h"
-#include "DHT.h"
 
 // Pin-Definitionen
 const int pin_UV_ref3V3    = 1;

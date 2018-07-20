@@ -1,7 +1,7 @@
 #ifndef BMP180WRAPPER_h
 #define BMP180WRAPPER_h
 
-#include "SFE_BMP180.h"
+#include "src/SFE_BMP180/SFE_BMP180.h"
 
 
 class BMP180wrapper{
