@@ -1,3 +1,8 @@
+/*
+ * Helper code 
+ */
+// SGHWeather v11.3
+
 #include "BMP180wrapper.h"
 
 
