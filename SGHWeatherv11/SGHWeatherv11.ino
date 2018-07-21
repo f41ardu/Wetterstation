@@ -4,9 +4,7 @@
 //  |  https://thingspeak.com/channels/299338 |
 //  |                                         |
 //  -------------------------------------------
-// SGHWeather v11.1
-// #include <SoftwareSerial.h>
-
+// SGHWeather v11.2
 
 // AltSoftSerial always uses these pins:
 //
@@ -14,7 +12,6 @@
 // -----          --------  -------   ------------
 // Arduino Nano      9         8           10
 
-// Bibliotheken
 // Bibliotheken
 #include "src/AltSoftSerial/AltSoftSerial.h"
 #include "src/EnableInterrupt/EnableInterrupt.h"
@@ -45,7 +42,6 @@ unsigned long interval = 15000;
 // -----          --------  -------   ------------
 // Arduino Nano        9         8         10
 
-// SoftwareSerial ESP05(8, 9); //RX und TX Pins
 AltSoftSerial ESP05(8, 9); //RX und TX Pins
 
 // Bosch Drucksensor 
@@ -56,7 +52,7 @@ BMP180wrapper pressure(altitude);
 GP2Y1010AU0F DustSensor(pin_dustLedPower, pin_dust);
 
 // UV Sensor 
-UVlib UV( pin_UV_out, pin_UV_ref3V3);
+UVlib UV(pin_UV_out, pin_UV_ref3V3);
 
 // Luftfeuchtigkeitssensor 
 DHT dht(pin_DHT, DHT22);
@@ -65,12 +61,16 @@ DHT dht(pin_DHT, DHT22);
 volatile int wind_ct = 0;
 unsigned long wind_lastTime = 0;
 
+//Ombrometer
+volatile int ombro_ct = 0;
+unsigned long ombro_lastTime = 0;
+
 // Thinkspeak Verbindung 
 String domain = "184.106.153.149";
 String ssid = "PhysComp";
 String password = "XXXXXXXXXXX";
 
-String thingspeakKey = "YYYYYYYYYYYY";
+String thingspeakKey = "";
 
 boolean errorCondition = false;
 
@@ -81,19 +81,20 @@ void setup() {
   pressure.begin();
   dht.begin(); 
   enableInterrupt(pin_anemometer, countWind, RISING);
+  enableInterrupt(pin_ombrometer, countOmbro, RISING);
   delay(5000);
 }
 
 void loop() {
   
-  float fields[] = {NAN, NAN, NAN, NAN, NAN, NAN, NAN, NAN};
+  float fields[8] = {NAN, NAN, NAN, NAN, NAN, NAN, NAN, NAN};
   errorCondition = false;
   
   if( pressure.measure())
   {
     fields[0] = pressure.getP0();
     fields[1] = pressure.getP();
-    fields[2] = (pressure.getT() + dht.readTemperature())/2.0;
+    fields[2] = (pressure.getT() + dht.readTemperature()) / 2.0;
    }else
   {
     fields[0] = fields[1]  = fields[2] = NAN;
@@ -101,24 +102,28 @@ void loop() {
   fields[3] = DustSensor.density();
   fields[4] = UV.read();
   fields[5] = dht.readHumidity();
-//  fields[6] = anemometer();
   
-// Warten ohne Delay 
+// Warten ohne Delay
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis > interval) {
     previousMillis = currentMillis;
     if (MeasureState == LOW) {
       MeasureState = HIGH;
       fields[6] = anemometer();
+      fields[7] = ombrometer();
       uploadThingspeak(thingspeakKey, fields);
     }
     else {
      MeasureState = LOW;
      fields[6] = anemometer();
+     fields[7] = ombrometer();
      uploadThingspeak(thingspeakKey, fields);
     }
   }
- 
+}
+
+void countOmbro() {
+  ombro_ct ++;
 }
 
 void countWind() {
@@ -127,16 +132,29 @@ void countWind() {
 
 float anemometer() {
 
-  const float gaugeFact = 2.4;
+  const float gaugeFact = 0.32;
   unsigned long curTime = millis();
   unsigned int dt = curTime - wind_lastTime;
   wind_lastTime = curTime;
   float speed = float(wind_ct) / (dt / 1000.0) * gaugeFact;
-  Serial.println("dt: " + String(dt));
+  Serial.println("dt_wind: " + String(dt));
   Serial.println("wind_ct: " + String(wind_ct));
   speed = speed / 3.6;
   wind_ct = 0;
-  if(speed == 0.0) speed = NAN;
   return speed;
+}
+
+float ombrometer() {
+
+  const float volume = 1;
+  const float surface = 1;
+  unsigned long curTime = millis();
+  unsigned int dt = curTime - ombro_lastTime;
+  ombro_lastTime = curTime;
+  float water = float (ombro_ct * volume * 4) / surface;
+  Serial.println("dt_ombro: " + String(dt));
+  Serial.println("ombro_ct: " + String(ombro_ct));
+  ombro_ct = 0;
+  return water;
 }
 

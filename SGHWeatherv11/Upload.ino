@@ -1,4 +1,4 @@
-// SGHWaether v11.1
+// SGHWeather 11.2
 void uploadThingspeak(String thingspeakKey, float fields[]) {
 
   String startCmd = "AT+CIPSTART=\"TCP\",\"" + domain + "\",80";
@@ -9,25 +9,24 @@ void uploadThingspeak(String thingspeakKey, float fields[]) {
     Serial.println("Verbindungsfehler");
     errorCondition = true;
   }
-
+  
   String message = "/update?key=" + thingspeakKey;
   for (int i = 0; i < 8; i++) {
     if(!isnan(fields[i])) {
       message = message + "&field" + (i + 1) + "=" + fields[i];
     }
   }
-  String sendCmd = "GET " + message + " HTTP/1.0\r\n\r\n\r\n";
+  
+  String cmdBeginn = "GET ";
+  String cmdEnd = " HTTP/1.0\r\n\r\n\r\n";
   Serial.print("AT+CIPSEND=");
-  //ESP05.print();
-  Serial.println(sendCmd.length());
-  ESP05.println("AT+CIPSEND=" + String(sendCmd.length()));
-   
-  //Serial.println("Antwort: " + ESP05.readString());
+  Serial.println(cmdBeginn.length() + message.length() + cmdEnd.length());
+  ESP05.println("AT+CIPSEND=" + String(cmdBeginn.length() + message.length() + cmdEnd.length()));
    
   if(ESP05.find('>'))
   {
-    Serial.println(sendCmd);
-    ESP05.print(sendCmd);
+    Serial.println(cmdBeginn + message + cmdEnd);
+    ESP05.print(cmdBeginn + message + cmdEnd);
     delay(1000);
 
     while(ESP05.available())
