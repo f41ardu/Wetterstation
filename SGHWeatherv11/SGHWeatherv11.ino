@@ -20,6 +20,7 @@
 #include "src/DHT/DHT.h"
 
 #include "BMP180wrapper.h"
+// #include "nanoESP.h"
 
 // Pin-Definition
 const int pin_UV_ref3V3    = 1;
@@ -64,6 +65,10 @@ unsigned long wind_lastTime = 0;
 volatile int ombro_ct = 0;
 unsigned long ombro_lastTime = 0;
 
+// Connect WIFI 
+String wifiConnect ="AT+CWJAP=\"SSID\",\"PASSWORD\"";
+
+
 // Thinkspeak connection
 String domain = "184.106.153.149";
 String ssid = "PhysComp";
@@ -81,6 +86,7 @@ void setup() {
   dht.begin(); 
   enableInterrupt(pin_anemometer, countWind, RISING);
   enableInterrupt(pin_ombrometer, countOmbro, RISING);
+//  ESP05.println(wifiConnect); 
   delay(5000);
 }
 
