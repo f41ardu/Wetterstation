@@ -1,10 +1,9 @@
 /*
 
-SGHWeather v11.3
-Definition der Reihenfolge der Werte die der Arduino
-mit alen Sensoren an Thingspeak überträgt
-
-// SGHWaether v11.3
+Hier wird die Reihenfolge der Werte die der Arduino
+mit voller Bestückung hintereinander ausgibt.
+Die Werte werden voneinander mit einem Kommas getrennnt:
+// SGHWaether v11.1
   
 1.    Der Luftdruck             (in hPa)        BMP180            [Variable: Druck.p0]              -> A4 (SDA), A5 (SCL), GND(GND), VCC(3,3V)
 2.    Den absuluten Luftdruck   (in hPa)        BMP180            [Variable: Druck.P]               -> A4 (SDA), A5 (SCL), GND(GND), VCC(3,3V)
@@ -16,5 +15,5 @@ mit alen Sensoren an Thingspeak überträgt
 8.    Die Niederschlagsmenge    (mm/min)        Eigenproduktion   [Variable: rainAmmount]           -> pin 5
 
 
-Nicht verwendet:  Feinstaubsensor  (in Volt)       GP2Y1010AU0F      Variable: DustSensor.voltage()    -> mesurePin(grün) A6, ledpowerPin(orange) D12
+[4.1  Vom Feinstaubsensor       (in Volt)       GP2Y1010AU0F      Variable: DustSensor.voltage()    -> mesurePin(grün) A6, ledpowerPin(orange) D12]
 */

@@ -1,8 +1,3 @@
-/*
- * Helper code 
- */
-// SGHWeather v11.3
-
 #ifndef BMP180WRAPPER_h
 #define BMP180WRAPPER_h
 
