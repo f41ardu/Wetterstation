@@ -1,9 +1,4 @@
-/*
- * Helper code 
- * Upload Thingspeak
- */
-// SGHWeather v11.3
-
+// SGHWeather 11.2
 void uploadThingspeak(String thingspeakKey, float fields[]) {
 
   String startCmd = "AT+CIPSTART=\"TCP\",\"" + domain + "\",80";
