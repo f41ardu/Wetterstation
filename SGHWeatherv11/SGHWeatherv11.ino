@@ -4,7 +4,7 @@
 //  |  https://thingspeak.com/channels/299338 |
 //  |                                         |
 //  -------------------------------------------
-// SGHWeather v11.2
+// SGHWeather v11.3
 
 // AltSoftSerial always uses these pins:
 //
@@ -21,7 +21,7 @@
 
 #include "BMP180wrapper.h"
 
-// Pin-Definitionen
+// Pin-Definition
 const int pin_UV_ref3V3    = 1;
 const int pin_UV_out       = 2;
 const int pin_DHT          = 3;
@@ -32,29 +32,28 @@ const int pin_ombrometer   = 5;
 const int pin_serial_RX    = 8;
 const int pin_serial_TX    = 9;
 
-// Blink ohne Delay 
+// Blink without Delay 
 int MeasureState = LOW;
 unsigned long previousMillis = 0;
 unsigned long interval = 15000;
 
-// WLAN Verbindung 
+// WLAN Connection 
 // Board          Transmit  Receive   PWM Unusable
 // -----          --------  -------   ------------
 // Arduino Nano        9         8         10
-
 AltSoftSerial ESP05(8, 9); //RX und TX Pins
 
-// Bosch Drucksensor 
+// Bosch Pressure Sensor 
 const float altitude = 485.590; // Altitude of SGH in Holzerlingen in meters
 BMP180wrapper pressure(altitude);
 
-// Staubsensor 
+// Dust sensor 
 GP2Y1010AU0F DustSensor(pin_dustLedPower, pin_dust);
 
 // UV Sensor 
 UVlib UV(pin_UV_out, pin_UV_ref3V3);
 
-// Luftfeuchtigkeitssensor 
+// Humidity sensor 
 DHT dht(pin_DHT, DHT22);
 
 // Anemometer
@@ -65,7 +64,7 @@ unsigned long wind_lastTime = 0;
 volatile int ombro_ct = 0;
 unsigned long ombro_lastTime = 0;
 
-// Thinkspeak Verbindung 
+// Thinkspeak connection
 String domain = "184.106.153.149";
 String ssid = "PhysComp";
 String password = "XXXXXXXXXXX";
@@ -74,7 +73,7 @@ String thingspeakKey = "";
 
 boolean errorCondition = false;
 
-// Hier geht es los
+// Here we go ahead 
 void setup() {
   Serial.begin(9600);
   ESP05.begin(9600);
@@ -85,6 +84,7 @@ void setup() {
   delay(5000);
 }
 
+// Main loop
 void loop() {
   
   float fields[8] = {NAN, NAN, NAN, NAN, NAN, NAN, NAN, NAN};
@@ -120,41 +120,5 @@ void loop() {
      uploadThingspeak(thingspeakKey, fields);
     }
   }
-}
-
-void countOmbro() {
-  ombro_ct ++;
-}
-
-void countWind() {
-  wind_ct ++;
-}
-
-float anemometer() {
-
-  const float gaugeFact = 0.32;
-  unsigned long curTime = millis();
-  unsigned int dt = curTime - wind_lastTime;
-  wind_lastTime = curTime;
-  float speed = float(wind_ct) / (dt / 1000.0) * gaugeFact;
-  Serial.println("dt_wind: " + String(dt));
-  Serial.println("wind_ct: " + String(wind_ct));
-  speed = speed / 3.6;
-  wind_ct = 0;
-  return speed;
-}
-
-float ombrometer() {
-
-  const float volume = 1;
-  const float surface = 1;
-  unsigned long curTime = millis();
-  unsigned int dt = curTime - ombro_lastTime;
-  ombro_lastTime = curTime;
-  float water = float (ombro_ct * volume * 4) / surface;
-  Serial.println("dt_ombro: " + String(dt));
-  Serial.println("ombro_ct: " + String(ombro_ct));
-  ombro_ct = 0;
-  return water;
 }
 
